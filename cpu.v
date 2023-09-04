@@ -62,6 +62,26 @@ module cpu(clk, reset, port);
                    data;
 
   always @ (posedge clk) begin
+    if (reset) begin 
+      reg_pc <= 0;
+      reg_reg <= 0;
+      reg_port <= 0;
+    end else begin
+      reg_reg <= data_w;
+      case (addr_w)  //PC
+        TST:     reg_pc <= reg_pc + data_w[0];
+        PC:      reg_pc <= data_w;
+        default: reg_pc <= reg_pc + 1;
+      endcase
+      case (addr_w)  //other memory maped regs
+        PORT:    reg_port <= data_w; 
+      endcase
+    end
+  end
+endmodule
+
+/*  
+  always @ (posedge clk) begin
     if (reset) begin
       reg_pc <= 0;
     end else begin
@@ -76,4 +96,4 @@ module cpu(clk, reset, port);
       end
     end
   end
-endmodule
+*/  
